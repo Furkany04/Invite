@@ -23,7 +23,24 @@
 *,
 *::before,
 *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html, body, #root { height: 100%; width: 100%; overflow: hidden; }
+html,
+body,
+#root {
+  width: 100%;
+  min-height: 100%;
+  overflow-x: hidden;
+}
+
+html {
+  min-height: 100%;
+}
+
+body {
+  min-height: 100vh;
+  min-height: 100svh;
+  min-height: 100dvh;
+  overflow-y: auto;
+}
 body {
   background: var(--bg-deep);
   color: var(--white);
@@ -37,8 +54,10 @@ button { cursor: pointer; font-family: inherit; }
 ═══════════════════════════════════════════════════════════════ */
 .story-engine {
   position: relative;
-  width: 100vw;
-  height: 100vh;
+  width: 100%;
+  min-height: 100vh;
+  min-height: 100svh;
+  min-height: 100dvh;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -689,8 +708,11 @@ button { cursor: pointer; font-family: inherit; }
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
+  background-attachment: scroll;
   filter: brightness(0.82) saturate(0.88);
-  will-change: transform;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
 }
 
 /* Koyu gradient overlay — fotoğrafın tonu ve okunabilirliği korur */
@@ -732,4 +754,104 @@ button { cursor: pointer; font-family: inherit; }
   .modal-box   { padding: 32px 28px; }
   .final-buttons { flex-direction: column; }
   .final-btn   { width: 100%; }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   MOBILE ANDROID STABILITY FIXES
+═══════════════════════════════════════════════════════════════ */
+
+.scene-bg-wrapper,
+.bg,
+.bg-photo,
+.bg-overlay,
+.bg-vignette,
+.bg-particles-layer {
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+.door-stage,
+.door-panel,
+.door-face,
+.door-frame-bars,
+.door-interior-fill,
+.door-ambient-halo,
+.door-frame-edge-glow,
+.door-floor-beam {
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  transform-style: preserve-3d;
+}
+
+@media (max-width: 768px) {
+  html,
+  body,
+  #root,
+  .story-engine {
+    min-height: 100svh;
+    min-height: 100dvh;
+  }
+
+  .scene-bg-wrapper {
+    position: fixed;
+    inset: 0;
+    overflow: hidden;
+  }
+
+  .bg-photo {
+    background-attachment: scroll !important;
+    background-position: center center;
+    filter: brightness(0.78) saturate(0.88);
+  }
+
+  .bg-vignette {
+    background: radial-gradient(
+      ellipse 110% 100% at 50% 50%,
+      transparent 25%,
+      rgba(0,0,0,0.28) 62%,
+      rgba(0,0,0,0.58) 100%
+    );
+  }
+
+  .story-center {
+    width: 100%;
+    padding-inline: 16px;
+    gap: 22px;
+  }
+
+  .door-stage {
+    width: min(180px, 48vw);
+    height: min(310px, 48vh);
+    perspective: 700px;
+  }
+
+  .lyric-wrapper {
+    max-width: 94vw;
+    padding: 14px 18px;
+  }
+
+  .lyric-text {
+    font-size: clamp(1.35rem, 7vw, 2rem);
+    line-height: 1.45;
+    letter-spacing: 0.035em;
+  }
+
+  .open-btn {
+    font-size: 0.72rem;
+    letter-spacing: 0.18em;
+  }
+
+  .scene-dots {
+    bottom: max(18px, env(safe-area-inset-bottom));
+  }
+
+  .door-ambient-halo {
+    filter: blur(8px);
+  }
+
+  .door-floor-beam {
+    height: 42px;
+  }
 }
