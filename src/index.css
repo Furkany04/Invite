@@ -54,10 +54,9 @@ button { cursor: pointer; font-family: inherit; }
 ═══════════════════════════════════════════════════════════════ */
 .story-engine {
   position: relative;
-  width: 100%;
-  min-height: 100vh;
-  min-height: 100svh;
-  min-height: 100dvh;
+  width: 100vw;
+  height: 100vh;
+  height: 100svh;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -399,6 +398,9 @@ button { cursor: pointer; font-family: inherit; }
   bottom: 10px;
   z-index: 1;
   transform-style: preserve-3d;
+  will-change: transform;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
 }
 
 /* Kapı yüzü (ahşap doku) */
@@ -708,9 +710,7 @@ button { cursor: pointer; font-family: inherit; }
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  background-attachment: scroll;
   filter: brightness(0.82) saturate(0.88);
-  transform: translateZ(0);
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
 }
@@ -746,14 +746,25 @@ button { cursor: pointer; font-family: inherit; }
 /* ═══════════════════════════════════════════════════════════════
    RESPONSIVE
 ═══════════════════════════════════════════════════════════════ */
-@media (max-width: 640px) {
+@media (max-width: 768px) {
+  .story-engine {
+    height: 100vh;
+    height: 100svh;
+  }
+
   .door-stage  { width: 180px; height: 310px; perspective: 700px; }
-  .door-frame  { border-width: 13px; border-bottom-width: 8px; }
   .door-panel  { top: 13px; left: 13px; right: 13px; bottom: 8px; }
-  .story-center { gap: 24px; }
-  .modal-box   { padding: 32px 28px; }
-  .final-buttons { flex-direction: column; }
-  .final-btn   { width: 100%; }
+
+  .door-ambient-halo    { display: none; }
+  .door-frame-edge-glow { display: none; }
+  .door-floor-beam      { display: none; }
+
+  .lyric-backdrop { filter: none; }
+
+  .story-center    { gap: 24px; }
+  .modal-box       { padding: 32px 28px; }
+  .final-buttons   { flex-direction: column; }
+  .final-btn       { width: 100%; }
 }
 
 /* ═══════════════════════════════════════════════════════════════
