@@ -1,0 +1,735 @@
+/* ── Google Fonts ──────────────────────────────────────────────── */
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Montserrat:wght@300;400&display=swap');
+
+/* ── CSS Variables ─────────────────────────────────────────────── */
+:root {
+  --bg-deep:     #06091a;
+  --bg-navy:     #0b1428;
+  --ice-blue:    #a8d4ee;
+  --ice-light:   #d4eeff;
+  --white:       #f0f8ff;
+  --gold:        #c8a030;
+  --warm-cream:  #fff8e8;
+
+  /* Door */
+  --frame-color: #141e38;
+  --frame-edge:  #1d2d4e;
+  --wood-dark:   #3a2210;
+  --wood-mid:    #4a3018;
+  --wood-light:  #5a4028;
+}
+
+/* ── Reset ─────────────────────────────────────────────────────── */
+*,
+*::before,
+*::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body, #root { height: 100%; width: 100%; overflow: hidden; }
+body {
+  background: var(--bg-deep);
+  color: var(--white);
+  font-family: 'Montserrat', sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+button { cursor: pointer; font-family: inherit; }
+
+/* ═══════════════════════════════════════════════════════════════
+   STORY ENGINE LAYOUT
+═══════════════════════════════════════════════════════════════ */
+.story-engine {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.story-center {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 36px;
+}
+
+/* ── Scene progress dots ─────────────────────────────────────── */
+.scene-dots {
+  position: fixed;
+  bottom: 28px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 8px;
+  z-index: 20;
+}
+.scene-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.22);
+  transition: all 0.4s ease;
+}
+.scene-dot--active {
+  background: rgba(255,255,255,0.85);
+  transform: scale(1.4);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   SCENE BACKGROUNDS
+═══════════════════════════════════════════════════════════════ */
+.scene-bg-wrapper {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+.bg {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+/* Winter Night */
+.bg-winter-night {
+  background: radial-gradient(ellipse 120% 100% at 50% 0%,
+    #1a1442 0%, #0e1535 30%, #080e22 65%, #040810 100%);
+}
+
+/* Gaming Night */
+.bg-gaming-night {
+  background: radial-gradient(ellipse 120% 100% at 50% 0%,
+    #1a1030 0%, #120a28 35%, #0a0618 70%, #060412 100%);
+}
+/* Gaming Night — ana ekran ambient glow */
+.gn-screen-main {
+  position: absolute;
+  left: 50%;
+  top: 10%;
+  transform: translateX(-50%);
+  width: 55%;
+  height: 45%;
+  background: radial-gradient(ellipse 80% 80% at 50% 45%,
+    rgba(70,110,200,0.28) 0%,
+    rgba(50,80,160,0.14) 55%,
+    transparent 80%);
+  filter: blur(28px);
+  pointer-events: none;
+}
+/* Gaming Night — yardımcı ekran glow (sağ yan) */
+.gn-screen-side {
+  position: absolute;
+  right: 8%;
+  top: 18%;
+  width: 28%;
+  height: 35%;
+  background: radial-gradient(ellipse 80% 80% at 50% 40%,
+    rgba(100,80,200,0.22) 0%,
+    rgba(70,55,150,0.10) 55%,
+    transparent 80%);
+  filter: blur(22px);
+  pointer-events: none;
+}
+/* Gaming Night — klavye/masa yansıması */
+.gn-desk-strip {
+  position: absolute;
+  left: 30%;
+  right: 20%;
+  bottom: 28%;
+  height: 12%;
+  background: radial-gradient(ellipse 90% 100% at 50% 0%,
+    rgba(80,120,220,0.20) 0%,
+    rgba(60,90,160,0.08) 60%,
+    transparent 100%);
+  filter: blur(16px);
+  pointer-events: none;
+}
+
+/* Distance */
+.bg-distance {
+  background: linear-gradient(180deg,
+    #0a1628 0%, #0d1c38 40%, #121f40 70%, #0a1428 100%);
+}
+.distance-ground {
+  position: absolute;
+  bottom: 25%;
+  left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg,
+    transparent 5%,
+    rgba(100,140,200,0.25) 20%,
+    rgba(100,140,200,0.25) 80%,
+    transparent 95%);
+}
+/* Uzak bina pencereleri */
+.distant-window {
+  position: absolute;
+  bottom: 32%;
+  width: 14px;
+  height: 20px;
+  background: rgba(180,220,255,0.70);
+  border-radius: 1px;
+  box-shadow:
+    0 0 12px rgba(160,210,255,0.60),
+    0 0 28px rgba(140,200,255,0.25);
+}
+.dw-left  { left:  22%; }
+.dw-right { right: 18%; }
+/* İki pencere arasındaki mesafe çizgisi */
+.distance-gap-line {
+  position: absolute;
+  bottom: calc(32% + 10px);
+  left:  calc(22% + 14px);
+  right: calc(18% + 14px);
+  height: 1px;
+  background: linear-gradient(90deg,
+    rgba(140,190,255,0.45), rgba(120,170,255,0.12), rgba(140,190,255,0.45));
+  transform-origin: left center;
+}
+
+/* Travel */
+.bg-travel {
+  background: linear-gradient(180deg,
+    #06091a 0%, #090d22 30%, #0c1228 60%, #101830 100%);
+}
+.mountains {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  width: 100%; height: 40%;
+}
+/* Dağ eteklerindeki köy ışıkları */
+.village-light {
+  position: absolute;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: rgba(255,230,140,0.85);
+  box-shadow:
+    0 0 8px rgba(255,210,100,0.65),
+    0 0 18px rgba(255,190,70,0.30);
+}
+.vl-1 { bottom: 42%; left:  18%; }
+.vl-2 { bottom: 44%; left:  28%; width: 4px; height: 4px; }
+.vl-3 { bottom: 41%; right: 22%; }
+.vl-4 { bottom: 43%; right: 30%; width: 3px; height: 3px; opacity: 0.75; }
+
+/* Nostalgia */
+.bg-nostalgia {
+  background: radial-gradient(ellipse 120% 100% at 50% 100%,
+    #2a1808 0%, #1a0e06 30%, #120a04 60%, #0a0602 100%);
+}
+.nostalgia-spot {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  pointer-events: none;
+}
+.nostalgia-spot-1 {
+  width: 400px; height: 400px;
+  top: -10%; left: -5%;
+  background: rgba(180,100,30,0.12);
+}
+.nostalgia-spot-2 {
+  width: 500px; height: 500px;
+  bottom: -20%; right: -10%;
+  background: rgba(200,140,50,0.10);
+}
+
+/* Cold */
+.bg-cold {
+  background: linear-gradient(180deg,
+    #050e1c 0%, #071422 35%, #08182a 65%, #060f1e 100%);
+}
+
+/* Cracks */
+.bg-cracks {
+  background: radial-gradient(ellipse 120% 100% at 50% 50%,
+    #0e0a20 0%, #080618 40%, #040410 70%, #020208 100%);
+}
+.cracks-svg {
+  position: absolute;
+  inset: 0;
+  width: 100%; height: 100%;
+}
+
+/* Almost Open */
+.bg-almost-open {
+  background: radial-gradient(ellipse 120% 100% at 50% 60%,
+    #2a1c10 0%, #1c1008 30%, #140c18 55%, #0c0614 100%);
+}
+
+/* Final */
+.bg-final {
+  background: radial-gradient(ellipse 160% 140% at 50% 60%,
+    #3a2810 0%, #281806 25%, #1c1008 50%, #100808 100%);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   DOOR
+═══════════════════════════════════════════════════════════════ */
+.door-stage {
+  position: relative;
+  width: 220px;
+  height: 380px;
+  perspective: 900px;
+  perspective-origin: 55% 50%;
+  user-select: none;
+}
+
+/* Kapı iç dolgusu — açılınca görünen sıcak ışık dikdörtgeni */
+.door-interior-fill {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  right: 16px;
+  bottom: 10px;
+  z-index: 0;
+  pointer-events: none;
+  background: linear-gradient(160deg,
+    rgba(255,200,80,0.24) 0%,
+    rgba(255,155,35,0.15) 45%,
+    rgba(200,95,15,0.09) 100%);
+}
+
+/* Çok dar ambient halo — sadece ~15px dışarı taşar, oval yumurta yok */
+.door-ambient-halo {
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  right: 4px;
+  bottom: 2px;
+  z-index: 0;
+  pointer-events: none;
+  background: radial-gradient(ellipse 115% 115% at 50% 50%,
+    rgba(255,175,55,0.20) 0%,
+    rgba(255,140,30,0.08) 52%,
+    transparent 70%);
+  filter: blur(14px);
+}
+
+/* Çerçeve kenar ışık sızıntısı */
+.door-frame-edge-glow {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  pointer-events: none;
+  box-shadow:
+    inset  2px  0 10px rgba(255,185,65,0.38),
+    inset -1px  0  8px rgba(255,185,65,0.22),
+    inset  0  2px 10px rgba(255,185,65,0.28),
+    inset  0 -1px  6px rgba(255,185,65,0.16);
+}
+
+/* Zemine düşen ışık şeridi */
+.door-floor-beam {
+  position: absolute;
+  bottom: 0;
+  left: 16px;
+  width: calc(100% - 16px);
+  height: 64px;
+  z-index: 0;
+  pointer-events: none;
+  background: linear-gradient(180deg,
+    rgba(255,185,65,0.32) 0%,
+    rgba(255,165,45,0.14) 45%,
+    transparent 100%);
+  clip-path: polygon(0 0, 100% 0, 115% 100%, -15% 100%);
+  transform-origin: left top;
+}
+
+/* Çerçeve — 4 ayrı bar, door-panel üstünde, saydam arka plan yok */
+.door-frame-bars {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+}
+.frame-bar {
+  position: absolute;
+  background: linear-gradient(135deg, #1d2d4e 0%, #141e38 55%, #1a2844 100%);
+  box-shadow: inset 0 0 6px rgba(0,0,0,0.55), 0 0 0 1px rgba(50,80,140,0.25);
+}
+.frame-bar-top    { top: 0;    left: 0;  right: 0;  height: 16px; border-radius: 3px 3px 0 0; }
+.frame-bar-left   { top: 0;    left: 0;  bottom: 0; width:  16px; }
+.frame-bar-right  { top: 0;    right: 0; bottom: 0; width:  16px; }
+.frame-bar-bottom { bottom: 0; left: 0;  right: 0;  height: 10px; }
+
+/* Menteşeler */
+.door-hinge {
+  position: absolute;
+  left: 9px;
+  z-index: 5;
+  width: 13px;
+  height: 30px;
+  background: linear-gradient(90deg, #6a5a50, #9a8a80, #7a6a60, #5a4a40);
+  border-radius: 3px;
+  box-shadow:
+    1px 1px 4px rgba(0,0,0,0.6),
+    inset 0 0 2px rgba(255,255,255,0.08);
+}
+.door-hinge-top    { top:    36px; }
+.door-hinge-bottom { bottom: 46px; }
+
+/* Dönen kapı kanadı */
+.door-panel {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  right: 16px;
+  bottom: 10px;
+  z-index: 1;
+  transform-style: preserve-3d;
+}
+
+/* Kapı yüzü (ahşap doku) */
+.door-face {
+  position: absolute;
+  inset: 0;
+  background:
+    repeating-linear-gradient(
+      89deg,
+      transparent 0,
+      transparent 22px,
+      rgba(0,0,0,0.055) 22px,
+      rgba(0,0,0,0.055) 23px
+    ),
+    linear-gradient(175deg,
+      var(--wood-light) 0%,
+      var(--wood-dark)  18%,
+      var(--wood-mid)   38%,
+      var(--wood-dark)  58%,
+      var(--wood-mid)   78%,
+      var(--wood-dark)  100%
+    );
+  box-shadow:
+     3px 0 14px rgba(0,0,0,0.80),
+    -1px 0  6px rgba(0,0,0,0.35),
+    inset -3px 0 10px rgba(0,0,0,0.40);
+}
+
+/* Süslü çerçeve paneller */
+.door-molding {
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  border: 2px solid rgba(200,160,80,0.22);
+  border-radius: 2px;
+  background: rgba(0,0,0,0.14);
+  box-shadow:
+    inset 1px 1px 5px rgba(0,0,0,0.45),
+    inset -1px -1px 2px rgba(200,160,80,0.07),
+    0 1px 0 rgba(200,160,80,0.12);
+}
+.door-molding-upper { top:    14px; height: 37%; }
+.door-molding-lower { bottom: 14px; height: 37%; }
+
+/* Kapı kolu */
+.door-handle-wrap {
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+.door-handle-bar {
+  width: 7px;
+  height: 42px;
+  background: linear-gradient(90deg,
+    #b08018, #e0c040, #c09028, #a07018, #c09028);
+  border-radius: 4px;
+  box-shadow:
+    1px 1px 5px rgba(0,0,0,0.7),
+    inset -1px 0 2px rgba(0,0,0,0.3),
+    inset  1px 0 2px rgba(255,220,100,0.2);
+}
+.door-handle-knob {
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(circle at 36% 30%,
+    #f0d060, #c8a030, #a07820, #7a5810);
+  border-radius: 50%;
+  box-shadow:
+    2px 2px 6px rgba(0,0,0,0.7),
+    inset -1px -1px 3px rgba(0,0,0,0.35),
+    inset  1px  1px 2px rgba(255,220,100,0.35);
+}
+
+/* Kapı yan yüzü (derinlik hissi) */
+.door-edge {
+  position: absolute;
+  top: 0;
+  right: -7px;
+  width: 7px;
+  height: 100%;
+  background: linear-gradient(90deg, #1a0e04, #2a1808, #1a0e04);
+  transform: rotateY(90deg);
+  transform-origin: left center;
+}
+
+/* Yere düşen gölge */
+.door-floor-shadow {
+  position: absolute;
+  bottom: 0;
+  left: 16px;
+  right: 0;
+  height: 24px;
+  background: radial-gradient(ellipse 90% 100% at 20% 0%,
+    rgba(0,0,0,0.55), transparent);
+  transform-origin: left bottom;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   LYRIC
+═══════════════════════════════════════════════════════════════ */
+.lyric-wrapper {
+  position: relative;
+  isolation: isolate;
+  text-align: center;
+  padding: 18px 36px;
+  max-width: 640px;
+}
+.lyric-backdrop {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: 14px;
+  background: radial-gradient(ellipse 90% 100% at 50% 50%,
+    rgba(4,6,20,0.58) 0%,
+    rgba(4,6,20,0.30) 58%,
+    transparent 100%);
+  filter: blur(10px);
+}
+.lyric-text {
+  position: relative;
+  z-index: 1;
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: clamp(1.4rem, 3.5vw, 2.1rem);
+  font-weight: 300;
+  font-style: italic;
+  letter-spacing: 0.04em;
+  line-height: 1.55;
+  color: rgba(245,252,255,0.96);
+  text-shadow:
+    0 0 40px rgba(185,218,255,0.55),
+    0 0 14px rgba(160,200,255,0.32),
+    0 2px 18px rgba(0,0,0,0.78);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   OPEN BUTTON
+═══════════════════════════════════════════════════════════════ */
+@keyframes btn-breathe {
+  0%, 100% { opacity: 0.55; text-shadow: none; }
+  50%       { opacity: 0.82; text-shadow: 0 0 20px rgba(160,200,255,0.38); }
+}
+
+.open-btn {
+  background: none;
+  border: none;
+  color: rgba(200,220,255,0.55);
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.78rem;
+  font-weight: 300;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  padding: 10px 20px;
+  position: relative;
+  transition: color 0.3s ease, text-shadow 0.3s ease;
+  animation: btn-breathe 3.5s ease-in-out infinite;
+}
+.open-btn::after {
+  content: '';
+  position: absolute;
+  bottom: 6px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 1px;
+  background: rgba(180,210,255,0.5);
+  transition: width 0.35s ease;
+}
+.open-btn:hover:not(.open-btn--busy) {
+  color: rgba(220,235,255,0.95);
+  animation: none;
+  opacity: 1;
+  text-shadow: 0 0 22px rgba(180,215,255,0.50);
+}
+.open-btn:hover:not(.open-btn--busy)::after {
+  width: 60%;
+}
+.open-btn--busy {
+  opacity: 0.3;
+  cursor: default;
+  animation: none;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   FINAL QUESTION
+═══════════════════════════════════════════════════════════════ */
+.final-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 40px;
+  text-align: center;
+  padding: 0 24px;
+}
+.final-question {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: clamp(1.6rem, 4vw, 2.6rem);
+  font-weight: 300;
+  font-style: italic;
+  letter-spacing: 0.03em;
+  line-height: 1.45;
+  color: rgba(255,248,220,0.95);
+  text-shadow:
+    0 0 40px rgba(255,200,80,0.5),
+    0 2px 16px rgba(0,0,0,0.5);
+  max-width: 520px;
+}
+.final-buttons {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.final-btn {
+  padding: 13px 32px;
+  border-radius: 50px;
+  font-size: 0.88rem;
+  font-weight: 400;
+  letter-spacing: 0.06em;
+  border: none;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+}
+.final-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+}
+.final-btn-yes {
+  background: linear-gradient(135deg, #c8a030, #e0bc50);
+  color: #1a1008;
+}
+.final-btn-yes:hover {
+  background: linear-gradient(135deg, #d8b040, #f0cc60);
+}
+.final-btn-talk {
+  background: rgba(200,220,255,0.12);
+  color: rgba(220,235,255,0.85);
+  border: 1px solid rgba(180,210,255,0.25);
+}
+.final-btn-talk:hover {
+  background: rgba(200,220,255,0.2);
+  border-color: rgba(180,210,255,0.45);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   MODAL
+═══════════════════════════════════════════════════════════════ */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  background: rgba(6,9,26,0.75);
+  backdrop-filter: blur(6px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+.modal-box {
+  position: relative;
+  background: linear-gradient(145deg, #1a1630, #120e28);
+  border: 1px solid rgba(180,200,255,0.18);
+  border-radius: 18px;
+  padding: 44px 48px;
+  max-width: 480px;
+  width: 100%;
+  box-shadow:
+    0 20px 60px rgba(0,0,0,0.6),
+    0 0 0 1px rgba(255,255,255,0.05),
+    inset 0 1px 0 rgba(255,255,255,0.07);
+}
+.modal-text {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: clamp(1.1rem, 2.5vw, 1.4rem);
+  font-weight: 300;
+  font-style: italic;
+  line-height: 1.65;
+  letter-spacing: 0.02em;
+  color: rgba(240,248,255,0.92);
+  text-align: center;
+  text-shadow: 0 1px 8px rgba(0,0,0,0.5);
+}
+.modal-close {
+  position: absolute;
+  top: 14px;
+  right: 18px;
+  background: none;
+  border: none;
+  color: rgba(180,200,255,0.4);
+  font-size: 1.4rem;
+  line-height: 1;
+  transition: color 0.2s;
+}
+.modal-close:hover { color: rgba(180,200,255,0.8); }
+
+/* ═══════════════════════════════════════════════════════════════
+   BACKGROUND IMAGE LAYER SYSTEM
+═══════════════════════════════════════════════════════════════ */
+
+/* Fotoğraf katmanı — cover, center, hafif renk düzeltme */
+.bg-photo {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  filter: brightness(0.82) saturate(0.88);
+  will-change: transform;
+}
+
+/* Koyu gradient overlay — fotoğrafın tonu ve okunabilirliği korur */
+.bg-overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+/* Vignette — kenarlarda derinlik hissi, her zaman aktif */
+.bg-vignette {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    ellipse 100% 100% at 50% 50%,
+    transparent 32%,
+    rgba(0,0,0,0.22) 65%,
+    rgba(0,0,0,0.50) 100%
+  );
+  pointer-events: none;
+}
+
+/* Parçacık katmanı — en üstte, overflow gizli */
+.bg-particles-layer {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   RESPONSIVE
+═══════════════════════════════════════════════════════════════ */
+@media (max-width: 640px) {
+  .door-stage  { width: 180px; height: 310px; perspective: 700px; }
+  .door-frame  { border-width: 13px; border-bottom-width: 8px; }
+  .door-panel  { top: 13px; left: 13px; right: 13px; bottom: 8px; }
+  .story-center { gap: 24px; }
+  .modal-box   { padding: 32px 28px; }
+  .final-buttons { flex-direction: column; }
+  .final-btn   { width: 100%; }
+}
