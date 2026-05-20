@@ -13,7 +13,9 @@
 // ║    → Görsel yoksa CSS animasyonlu arka plan fallback olarak çalışır║
 // ╚══════════════════════════════════════════════════════════════════════╝
 
-export const AUDIO_PATH = '/audio/kardan-adam.mp3';
+const BASE_URL = import.meta.env.BASE_URL;
+
+export const AUDIO_PATH = `${BASE_URL}audio/kardan-adam.mp3`;
 
 export const scenes = [
   // ─── SAHNE 0: GİRİŞ — kapı kapalı, müzik yok ─────────────────────
@@ -37,7 +39,7 @@ export const scenes = [
     audioEnd: 3.6,                   // ← bitiş saniyesi      (örn: 8)
     doorAngle: 11,
     background: 'gaming-night',
-    backgroundImage: '/backgrounds/scene-1.jpg',
+    backgroundImage: `${BASE_URL}backgrounds/scene-1.jpg`,
     buttonText: 'Biraz daha aç...',
   },
 
@@ -49,7 +51,7 @@ export const scenes = [
     audioEnd: 6.2,                   // ← bitiş saniyesi
     doorAngle: 22,
     background: 'distance',
-    backgroundImage: '/backgrounds/scene-2.jpg',
+    backgroundImage: `${BASE_URL}backgrounds/scene-2.jpg`,
     buttonText: 'Biraz daha aç...',
   },
 
@@ -61,7 +63,7 @@ export const scenes = [
     audioEnd: 8.7,                   // ← bitiş saniyesi
     doorAngle: 33,
     background: 'travel',
-    backgroundImage: '/backgrounds/scene-3.jpg',
+    backgroundImage: `${BASE_URL}backgrounds/scene-3.jpg`,
     buttonText: 'Biraz daha aç...',
   },
 
@@ -73,7 +75,7 @@ export const scenes = [
     audioEnd: 12.5,                   // ← bitiş saniyesi
     doorAngle: 45,
     background: 'nostalgia',
-    backgroundImage: '/backgrounds/scene-4.jpg',
+    backgroundImage: `${BASE_URL}backgrounds/scene-4.jpg`,
     buttonText: 'Biraz daha aç...',
   },
 
@@ -85,7 +87,7 @@ export const scenes = [
     audioEnd: 15.2,                   // ← bitiş saniyesi
     doorAngle: 57,
     background: 'cold',
-    backgroundImage: '/backgrounds/scene-5.jpg',
+    backgroundImage: `${BASE_URL}backgrounds/scene-5.jpg`,
     buttonText: 'Biraz daha aç...',
   },
 
@@ -97,7 +99,7 @@ export const scenes = [
     audioEnd: 16.7,                   // ← bitiş saniyesi
     doorAngle: 68,
     background: 'cracks',
-    backgroundImage: '/backgrounds/scene-6.jpg',
+    backgroundImage: `${BASE_URL}backgrounds/scene-6.jpg`,
     buttonText: 'Biraz daha aç...',
   },
 
@@ -109,7 +111,7 @@ export const scenes = [
     audioEnd: 20.5,                   // ← bitiş saniyesi
     doorAngle: 79,
     background: 'almost-open',
-    backgroundImage: '/backgrounds/scene-7.jpg',
+    backgroundImage: `${BASE_URL}backgrounds/scene-7.jpg`,
     buttonText: 'Biraz daha aç...',
   },
 
@@ -121,7 +123,7 @@ export const scenes = [
     audioEnd: 30,                   // ← bitiş saniyesi
     doorAngle: 87,
     background: 'final',
-    backgroundImage: '/backgrounds/scene-8.jpg',
+    backgroundImage: `${BASE_URL}backgrounds/scene-8.jpg`,
     buttonText: 'İçeri gir...',
   },
 
