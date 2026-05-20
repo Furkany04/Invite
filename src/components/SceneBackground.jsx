@@ -1,4 +1,5 @@
 import { motion } from 'motion/react';
+const IS_MOBILE = typeof window !== 'undefined' && window.matchMedia('(max-width: 768px)').matches;
 
 // ─── Deterministic particle data ────────────────────────────────────
 const makeSnow = (count, seed = 1) =>
@@ -332,16 +333,16 @@ export default function SceneBackground({ type, backgroundImage }) {
       exit={{ opacity: 0 }}
       transition={{ duration: 1.2 }}
     >
-      {/* ── Katman 1: Fotoğraf (varsa) — hafif zoom animasyonuyla girer */}
-      {hasImage && (
-        <motion.div
-          className="bg-photo"
-          style={{ backgroundImage: `url(${backgroundImage})` }}
-          initial={{ scale: 1.06 }}
-          animate={{ scale: 1.02 }}
-          transition={{ duration: 9, ease: 'easeOut' }}
-        />
-      )}
+      {/* ── Katman 1: Fotoğraf (varsa) — masaüstünde Ken Burns, mobilde statik */}
+{hasImage && (
+  <motion.div
+    className="bg-photo"
+    style={{ backgroundImage: `url(${backgroundImage})` }}
+    initial={{ scale: IS_MOBILE ? 1.02 : 1.06 }}
+    animate={{ scale: 1.02 }}
+    transition={IS_MOBILE ? { duration: 0 } : { duration: 9, ease: 'easeOut' }}
+  />
+)}
 
       {/* ── Katman 2: CSS gradyan — görsel yoksa tam opak fallback,
                                    varsa renk tonu olarak hafif görünür */}
